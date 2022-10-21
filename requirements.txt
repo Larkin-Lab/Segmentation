@@ -1,0 +1,10 @@
+scikit-image
+scikit-learn
+seaborn
+matplotlib
+numpy
+pandas
+scipy
+tqdm
+joblib
+jupyter

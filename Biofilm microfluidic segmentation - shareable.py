@@ -46,7 +46,7 @@ from joblib import Parallel, delayed
 # from scipy.spatial.distance import cdist
 # from scipy import ndimage as ndi
 # os.chdir('/Users/danielkostman/Documents/maya testos/Sgro Lab/scripts/Microfluidic segmentation')
-os.chdir('F:\scripts\Microfluidic segmentation')
+# os.chdir('F:\scripts\Microfluidic segmentation')
 
 from centroid_tracker import CentroidTracker, feature_dist
 # os.chdir('/Users/danielkostman/')
