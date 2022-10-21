@@ -55,22 +55,27 @@ from centroid_tracker import CentroidTracker, feature_dist
 # file number
 file_num = '010'
 # experiment number
-exp = 'F0230'
+exp = 'F0292'
 # chamber
 ch = "ch1"
 # time btw imaging
 img_freq = 5
 
 # graph_directory = ('/Users/danielkostman/Documents/maya testos/Larkin Lab/experiments/F0230/binned/graphs')
-graph_directory = ('F:\Experiments\{}\graphs'.format(exp))
+graph_directory = (r'C:\Users\jtincan\Desktop\{}\graphs'.format(exp))
 # graph_directory = os.chdir('/Volumes/MPK_sandisk/Experiments/{}/graphs'.format(exp))
 # /Volumes/MPK_sandisk/Experiments/F0230
 
 # # os.chdir('/Users/danielkostman/Documents/maya testos/Larkin Lab/experiments/F0230/binned')
 # os.chdir('/Volumes/MPK_sandisk/Experiments/{}/processed tifs'.format(exp))
-os.chdir(r'F:\Experiments\{}\processed tifs'.format(exp))
+data_path = r'C:\Users\jtincan\Desktop\{}\processed'.format(exp)
+os.chdir(data_path)
 # os.chdir('/Users/danielkostman/Dropbox/F0194_03312022/cropped tif')
 
+
+#list all processed data in directory
+data_list = os.listdir(data_path)
+print(data_list)
 phase = io.imread('{}_{}_C0001.tif'.format(exp,file_num))
 CFP = io.imread('{}_{}_C0002.tif'.format(exp,file_num))
 
