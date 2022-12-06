@@ -28,19 +28,25 @@ class WekaPhase(object):
 #		print len(self.filepaths)
 		return None
 	
-	def run(self,threadcount=None):
-		'''Function run allows function process to be run in parallel with varying number of threads.'''
-		pool = Executors.newFixedThreadPool(threadcount) # Define Threads
-		process = [process(filename=image) for image in self.filenames] # define the task to do in a multithreaded way
-		pool.invokeAll(process) # use all defined threads to process the images
-		self.shutdown_and_await_termination(pool=pool, timeout=5)
-		return None
-	
+#	def run(self,threadcount=None):
+#		'''Function run allows function process to be run in parallel with varying number of threads.'''
+#		pool = Executors.newFixedThreadPool(threadcount) # Define Threads
+#		process = [self.process(filename=image) for image in self.filenames] # define the task to do in a multithreaded way
+#		pool.invokeAll(process) # use all defined threads to process the images
+#		self.shutdown_and_await_termination(pool=pool, timeout=5)
+#		return None
+#	
+	def run(self):
+		'''Iterate process function over all pH tif files.'''
+		for filename in self.filenames:
+			self.process(filename)
+		print "run complete"
+		
 	def process(self, filename=None):
 		'''Function perfoming the segmentation of a phase contrast image with trained weka function.'''
 		image = IJ.openImage(os.path.join(self.srcdir,filename))
 		weka = WekaSegmentation() # Create weka instance.
-		weka.setTrainingImage(image) # Set image to test (Not in init)
+		weka.setTrainingImage(image) # Set image to segment (Not in init)
 		weka.loadClassifier(self.classpath) # loads manually trained classifier
 		segmented_image = weka.applyClassifier(image, 0, False) # apply classifier and get results. (Not in init)
 		# assign same LUT as in GUI. Within WEKA GUI, right-click on classified image and use Command Finder to save the "LUT" within Fiji.app\luts
