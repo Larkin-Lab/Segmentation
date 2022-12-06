@@ -8,3 +8,4 @@ scipy
 tqdm
 joblib
 jupyter
+python-weka-wrapper3
