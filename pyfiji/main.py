@@ -17,7 +17,7 @@ from pH_weka import WekaPhase
 # Set source directory for images
 srcdir = r'C:\Users\jtincan\Desktop\F0312\tifs'
 # Set directory for segmentation output
-outdir = r'C:\Users\jtincan\Desktop\F0312\weka_segmentaion'
+outdir = r'C:\Users\jtincan\Desktop\F0312\weka_segmentation'
 # Choose which trained segmentation model to use with dataset. Models are in Github\Segmentation\weka_models folder.
 classpath = os.path.join(os.path.dirname(pyfiji_path),r'weka_models\Cellasic_BO4F_MPK_12062022.model') 
 
