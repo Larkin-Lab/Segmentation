@@ -17,15 +17,17 @@ class WekaPhase(object):
 		self.outdir = output_dir
 		self.classpath = classifier_path
 		#Set up data files to be iterate over, filter for only channel 1 .tiffs
-		for self.root, self.directories, self.filenames in os.walk(source_dir):
-			self.filenames.sort();
-			for filename in self.filenames: # Check for file extension
-				if not filename.endswith('.tif') or 'C0001' not in filename:
-					self.filenames.remove(filename)
+		self.filenames=[]
+		for self.root, self.directories, allfiles in os.walk(source_dir):
+			print "Number of files identified in source directory: ",  len(allfiles)
+			allfiles.sort();
+			for filename in allfiles: # Check for file extension
+				if filename.endswith('.tif') and 'C0001' in filename:
+					self.filenames.append(filename)
+		print "Number of phase image files identified for processing: ", len(self.filenames)
 		if not os.path.exists(output_dir):
 			os.makedirs(output_dir)
-			print "Created new directory {}".format(output_dir)
-		print "Number of phase images to process: ", len(self.filenames)
+			print "Created new directory {}".format(output_dir)	
 		return None
 	
 #	def run(self,threadcount=None):
@@ -37,7 +39,7 @@ class WekaPhase(object):
 #		return None
 #	
 	def run(self):
-		'''Iterate process function over all pH tif files.'''
+		'''Iterate process function over all pH tif files. Weka in process is already multithreaded'''
 		for filename in self.filenames:
 			self.process(filename)
 		print "run complete"

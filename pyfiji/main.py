@@ -28,6 +28,6 @@ process = segmenter.process
 run = segmenter.run
 
 #Do analysis here
-t0=time.time()
-run()
-print "Time Elapsed: ", time.time()-t0
+#t0=time.time()
+#run()
+#print "Time Elapsed: ", time.time()-t0
