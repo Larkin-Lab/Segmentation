@@ -20,12 +20,12 @@ class WekaPhase(object):
 		for self.root, self.directories, self.filenames in os.walk(source_dir):
 			self.filenames.sort();
 			for filename in self.filenames: # Check for file extension
-				if not filename.endswith('.tif') or 'C0001' not in self.filenames:
+				if not filename.endswith('.tif') or 'C0001' not in filename:
 					self.filenames.remove(filename)
 		if not os.path.exists(output_dir):
 			os.makedirs(output_dir)
 			print "Created new directory {}".format(output_dir)
-#		print len(self.filepaths)
+		print "Number of phase images to process: ", len(self.filenames)
 		return None
 	
 #	def run(self,threadcount=None):
