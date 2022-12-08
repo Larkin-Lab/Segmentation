@@ -30,16 +30,8 @@ class WekaPhase(object):
 			print "Created new directory {}".format(output_dir)	
 		return None
 	
-#	def run(self,threadcount=None):
-#		'''Function run allows function process to be run in parallel with varying number of threads.'''
-#		pool = Executors.newFixedThreadPool(threadcount) # Define Threads
-#		process = [self.process(filename=image) for image in self.filenames] # define the task to do in a multithreaded way
-#		pool.invokeAll(process) # use all defined threads to process the images
-#		self.shutdown_and_await_termination(pool=pool, timeout=5)
-#		return None
-#	
 	def run(self):
-		'''Iterate process function over all pH tif files. Weka in process is already multithreaded'''
+		'''Iterate process function over all pH tif files. If using Weka, process is already multithreaded'''
 		for filename in self.filenames:
 			self.process(filename)
 		print "run complete"
@@ -58,7 +50,52 @@ class WekaPhase(object):
 		IJ.saveAs(segmented_image, "Tif", os.path.join(self.outdir, filename.replace('.tif', '') + '_weka'))
 		image.close()
 		return None
-
+	
+	def gpu_run(self):
+		'''Iterate process function over all pH tif files. If using Weka, process is already multithreaded'''
+		for filename in self.filenames:
+			self.macroprocess(filename)
+		print "run complete"
+		
+	def macroprocess(self, filename=None):
+		'''Function perfoming the segmentation of a phase contrast image with trained weka function.'''
+		image_source = os.path.join(self.srcdir,filename)
+		image_destination = os.path.join(self.outdir, filename.replace('.tif', '') + '_weka')
+		macrocmd=self.clij_script(filename)
+#		print macrocmd
+		IJ.runMacro(macrocmd)
+#		segmented_image= IJ.runMacro(macrocmd)
+#		IJ.saveAs(segmented_image, "Tif", image_destination)
+#		image.close()
+		return None
+		
+	def clij_script(self,filename=None):
+		source_image_path = os.path.join(self.srcdir,filename).replace('\\','\\\\')
+		output_image_path = os.path.join(self.outdir, filename.replace('.tif', '') + r'_weka.tif').replace('\\','\\\\')
+		model_path=self.classpath.replace('\\','\\\\')
+		macrocmd=r'''
+		run("CLIJ2 Macro Extensions", "cl_device=");
+		Ext.CLIJ2_clear();
+		open("{source_image_path}");
+		original = "original";
+		rename(original);
+		run("32-bit");
+		Ext.CLIJ2_push(original);
+		result = "{output_image_path}";
+		Ext.CLIJx_applyWekaModel(original, result, "{model_path}");
+		Ext.CLIJ2_pull(result);
+		Ext.CLIJ2_clear();
+		'''.format(source_image_path=source_image_path,output_image_path=output_image_path,model_path=model_path)
+		return macrocmd
+		
+	def multi_run(self,threadcount=None):
+		'''Function run allows function process to be run in parallel with varying number of threads.'''
+		pool = Executors.newFixedThreadPool(threadcount) # Define Threads
+		process = [self.process(filename=image) for image in self.filenames] # define the task to do in a multithreaded way
+		pool.invokeAll(process) # use all defined threads to process the images
+		self.shutdown_and_await_termination(pool=pool, timeout=5)
+		return None
+		
 	def shutdown_and_await_termination(self,pool=None, timeout=None):
 		'''Function for shutting down the pool taken from: http://www.jython.org/jythonbook/en/1.0/Concurrency.html'''
 		pool.shutdown()
@@ -73,3 +110,8 @@ class WekaPhase(object):
 			# Preserve interrupt status
 			Thread.currentThread().interrupt()
 		return None
+
+		
+		
+		
+		
